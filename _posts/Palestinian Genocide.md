@@ -1,0 +1,190 @@
+---
+title: "Palestinian Genocide in Gaza"
+author: "Itamar Johan Rachailovich"
+date: "2024-11-26"
+output: html_document
+---
+---
+title: "Gaza Genocide"
+author: "Itamar Johan Rachailovich"
+date: "2024-11-26"
+output: html_document
+---
+
+ Libraries
+```{r setup, include=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(gtsummary)
+library(ggplot2)
+library(maps) # Get palestinian cities
+library(sf)   # convert it to sf dataframe, assign projection to the coordinates and save it
+library(leaflet)
+library(leaflet.providers)
+library(patchwork)
+library(htmltools)
+library(htmlwidgets)
+```
+
+# Data
+```{r, warning=FALSE, message=FALSE}
+gaza_geno <- read.csv("D:/R_Gaza/gaza/data/killed-in-gaza.csv")
+class(gaza_geno)
+```
+
+# First data exploration
+```{r, warning=FALSE, message=FALSE, echo=FALSE}
+gaza_geno <- as_tibble(gaza_geno)
+#class(gaza_geno)
+gaza_geno
+
+death_by_age <- 
+  gaza_geno %>% 
+  group_by(age = as.integer(age)) %>% 
+  summarise(Death = n())
+
+peak_10_ages <- death_by_age %>% 
+  top_n(n = 10, Death) %>% 
+  pull(age)
+ 
+peak_10_ages <- as.matrix(peak_10_ages) 
+colnames(peak_10_ages)<- c("Peak ages of death")
+peak_10_ages %>% kbl(align = "c") %>% kable_classic() %>% kable_styling(, full_width = FALSE)
+
+
+age_quantiles <- quantile(gaza_geno$age)
+age_quantiles <- as.matrix(age_quantiles)
+age_quantiles_rownames <- rownames(age_quantiles)
+age_quantiles <- as.tibble(cbind(age_quantiles, age_quantiles_rownames))
+#colnames(age_quantiles)
+colnames(age_quantiles)<- c("Age", "Quantile")
+
+age_quantiles %>% kbl(caption = "Age quantiles of murdered palestinians") %>% kable_classic() %>% kable_styling(full_width = FALSE, )
+
+
+death_by_sex_age <- 
+  gaza_geno %>% 
+  mutate(sex = factor(sex, levels = c("f", "m"), 
+                      labels = c("Female", "Male"))) %>% 
+  group_by(age, sex, .groups = TRUE) %>% 
+  summarise(Death = n())
+
+death_by_sex_age <- death_by_sex_age[-3]
+
+tbl_by_sex_age <- gaza_geno %>% 
+  select(sex, age) %>% 
+  mutate(sex = factor(sex, levels = c("f", "m"), labels = c("Female", "Male"))) %>% 
+  tbl_summary(label = list(sex = "Sex", age = "Age")) 
+
+tbl_by_sex_age
+```
+
+# Plots
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+theme_set(theme_bw())
+
+A <-   gaza_geno %>% 
+  ggplot(aes(x = age))+
+  geom_histogram(fill = "#4D5052", colour = "black", bins = 20, binwidth = 2)+
+  scale_x_continuous(breaks = seq(0, 100, 20))+
+  labs(title = "Gaza genocide - Death by Age", x = "Age", y = "Frequency of Deaths")+
+  theme(plot.title = element_text(face = "bold"))
+
+B <-   death_by_age %>% 
+  ggplot(aes(x = age, y = Death))+
+  geom_line()+
+  geom_segment(x = 14, xend= 14, y = 0, yend = 659, linetype = "dashed")+
+  geom_segment(x = 26, xend= 26, y = 0, yend = 652, linetype = "dashed")+
+  geom_segment(x = 39, xend= 39, y = 0, yend = 469, linetype = "dashed")+
+  scale_x_continuous(breaks = seq(0, 100, 20))+
+  labs(title = "Gaza genocide - Death by Age", x = "Age", y = "Number of Deaths", 
+       caption = "The frequency and number of murdered palestinians by age (murdered by the Israelis)")+
+  theme(plot.title = element_text(face = "bold"), 
+        plot.caption = element_text(face = "italic", colour = "#4D5052"), 
+        plot.caption.position = "plot")
+
+hist_linechart_geno <-  A + B 
+
+
+
+pal_hist_linechart <- plotTag({
+  hist_linechart_geno
+}, "Gaza genocide - Death by Age", width = 700, height = 400)
+
+pal_hist_linechart
+
+#save_html(html = pal_hist_linechart, file = "pal_hist_linechart.html")
+```
+
+# Maps 
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
+# Get palestinian cities, convert it to sf dataframe, assign projection to the coordinates and save it
+
+data(world.cities)
+palestine_cities <- world.cities %>% filter(country.etc == "Palestine")
+class(palestine_cities)
+palestine_cities <- as_tibble(palestine_cities)
+#write_excel_csv(palestine_cities, 
+                #file = "D:/R_Gaza/IRachailovich.github.io/data/palestinians_cities.csv")
+
+names(palestine_cities)    #get the names for the coordinate variables
+palestine_cities_sf <- st_as_sf(palestine_cities, coords = c("lat", "long")) #convert to sf df tibble
+class(palestine_cities_sf) #check if class has changed to sf dataframe tibble
+st_crs(palestine_cities_sf) #check for geographic projections
+st_crs(palestine_cities_sf) <- 4326  #assign geographic projection (4326, i.e., longlat WGS84)
+st_crs(palestine_cities_sf)$proj4string  #check if the geographic projection was assigned
+names(palestine_cities_sf) #check if "lat" and "long" variables were changed to "geometry" variable.
+#st_write(palestine_cities_sf, "D:/R_Gaza/IRachailovich.github.io/data/palestinian_cities", 
+         #driver = "ESRI Shapefile", delete_layer = TRUE)  # save the sf data frame as shapefile
+
+
+
+localities_palestine_sf <- st_read("data/localities_palestine")
+localities_palestine_sf %>% head()
+class(localities_palestine_sf)
+st_crs(localities_palestine_sf)$proj4string
+
+localities_palestine_WGS84 <- st_transform(localities_palestine_sf, crs = 4326)
+st_crs(localities_palestine_WGS84)$proj4string
+#st_write(localities_palestine_WGS84, "D:/R_Gaza/IRachailovich.github.io/data/localities_palestine", 
+         #driver = "ESRI Shapefile", delete_layer = TRUE)
+
+st_crs(localities_palestine_WGS84)$proj4string
+st_crs(palestine_cities_sf)$proj4string
+```
+
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE}
+simple_polygons <- plotTag({
+  ggplot(localities_palestine_WGS84)+
+  geom_sf(colour = "black")
+}, "simple_polygons", width = 700, height = 400)
+
+simple_polygons
+#save_html(html = simple_polygons, file = "simple_polygons.html")
+
+col_fun <- colorFactor(c("#337bd7", "#c8143b"), domain = NULL)
+itamar <- st_point(c(34.82375, 31.89530))
+itamarpopup <- c("Where I.J.R was born")   
+pal_popup <- paste0("<strong>City Name:</strong>", palestine_cities$name)
+
+
+palestine_map <- leaflet(localities_palestine_WGS84) %>% 
+  addPolygons(stroke = TRUE, weight = 0.7, color = "black", 
+              fillColor = ~col_fun(REGIONCODE), 
+              group = "Regions", fillOpacity = 0.8) %>% 
+  addCircleMarkers(lng = 34.82375 , lat = 31.89530, group = "Where I Live",
+                   popup = itamarpopup) %>% 
+  addCircleMarkers(data = palestine_cities, group = "Cities", popup = pal_popup, 
+                   radius = 0.01, color = "#2c120c") %>% 
+  addTiles(group = "OSM") %>% 
+  addProviderTiles(provider = "CartoDB", group = "CartoDB") %>% 
+  addProviderTiles(provider = "CartoDB.Voyager", group = "CartoDB.Voyager") %>% 
+  addProviderTiles(provider = "Esri", group = "Esri") %>% 
+  addLayersControl(baseGroups = c("OSM", "CartoDB", "CartoDB.Voyager", "Esri"), 
+                   overlayGroups = c("Regions", "Where I Live", "Cities"))
+palestine_map
+
+#saveWidget(widget = palestine_map, file = "palestine_map.html", selfcontained = TRUE)
+```
