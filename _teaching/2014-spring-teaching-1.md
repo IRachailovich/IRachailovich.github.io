@@ -8,6 +8,6 @@ date: 2024-01-07
 location: "Rehovot, Israel"
 ---
 
-In depth courde about the "reward system", dopamine, motivation and drug addiction
+# In depth courde about the "reward system", dopamine, motivation and drug addiction
 
 [https://www.youtube.com/watch?v=VUiHTJluSEY&list=PLgUuu5ueYIA-mbnKyNLVz-1Lntn35axEm&index=1&t=6279s](https://www.youtube.com/watch?v=VUiHTJluSEY&list=PLgUuu5ueYIA-mbnKyNLVz-1Lntn35axEm&index=1&t=6279s)
