@@ -16,12 +16,16 @@ main:
     
   - title: "Portfolio"
     url: /portfolio/
-        
-  - title: "Posts"
+
+- title: "Posts"
     url: /_posts/
+        
     
   - title: "CV"
     url: /files/CV-I.-J.-Rachailovich.pdf
+
+ # - title: "Posts"
+ #   url: /year-archive/
     
-#  - title: "Guide"
- #   url: /markdown/
+ #  - title: "Guide"
+ #    url: /markdown/
