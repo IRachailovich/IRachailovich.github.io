@@ -21,9 +21,9 @@ repository               : "academicpages/academicpages.github.io"
 #               Additional customization can be done by editing /_includes/author-profile.html
 author:
   # Biographic information
-  avatar           : "/my_profile_photo.png.png"
+  avatar           : "/my_profile_photo.png"
   name             : "I. J. Rachailovich"
-  pronouns         : # example: "he/him"  
+  pronouns         : "he/him"  
   bio              : "Major in both Biology and Psychology with honors"
   location         : "Rehovot, Israel"
   employer         : "University"
@@ -67,7 +67,7 @@ author:
   weibo            : # Username
   wikipedia        : # Username
   xing             : # Username
-  youtube          : "UCaxYax1SMtWPzeBNZnQh_bA"
+  youtube          : "@itamar.j.rachailovich"
   zhihu            : # Username
 
 # Publication Category - The following the list of publication categories and their headings
