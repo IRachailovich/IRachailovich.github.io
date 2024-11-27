@@ -9,4 +9,4 @@ location: "Rehovot, Israel"
 ---
 
 # In depth courde about the "reward system", dopamine, motivation and drug addiction
-[https://www.youtube.com/watch?v=xhU7rs5OWxo&list=PLgUuu5ueYIA-mbnKyNLVz-1Lntn35axEm&index=3](https://www.youtube.com/watch?v=xhU7rs5OWxo&list=PLgUuu5ueYIA-mbnKyNLVz-1Lntn35axEm&index=3)
+[https://www.youtube.com/watch?v=oYwisJ1tQks&list=PLgUuu5ueYIA-mbnKyNLVz-1Lntn35axEm&index=4](https://www.youtube.com/watch?v=oYwisJ1tQks&list=PLgUuu5ueYIA-mbnKyNLVz-1Lntn35axEm&index=4)
