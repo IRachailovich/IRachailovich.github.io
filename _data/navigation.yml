@@ -18,7 +18,7 @@ main:
     url: /portfolio/
         
   - title: "Posts"
-    url: /year-archive/
+    url: /_posts/
     
   - title: "CV"
     url: /files/CV-I.-J.-Rachailovich.pdf
