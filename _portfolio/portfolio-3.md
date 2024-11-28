@@ -1,6 +1,6 @@
 ---
 title: "Interactive Map"
-excerpt: "An interactive map of Palestine I made, please click on the link below<br/><img src='/images/pal_polygons.png'>"
+excerpt: "An interactive map of Palestine I made, please click on the link "Interactive Map"(the title)<br/><img src='/images/pal_polygons.png'>"
 collection: portfolio
 ---
 
