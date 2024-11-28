@@ -23,7 +23,7 @@ author:
   # Biographic information
   avatar           : "profile_photo.png"
   name             : "I. J. Rachailovich"
-  pronouns         : "he/him"  
+  #pronouns         : "he/him"  
   bio              : "Major in both Biology and Psychology with honors"
   location         : "Rehovot, Israel"
   employer         : "University"
