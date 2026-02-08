@@ -1,210 +1,249 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I. Rachailovich | Data & Math</title>
-    <style>
-        /* --- CSS STYLES --- */
-        :root {
-            --primary: #CC0000; /* Tue Red */
-            --dark: #1a1a1a;
-            --light: #f4f4f4;
-            --text-grey: #666;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>I. Rachailovich — Research & Dev</title>
+  <meta name="description" content="I. Rachailovich — Gaussian Processes & Python Development." />
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #ffffff;
-            color: #333;
-            line-height: 1.6;
-        }
+  <style>
+    /* --- THEME DEFINITIONS (From Gauss File) --- */
+    :root {
+      --bg: #ffffff; --text: #0b0b0b; --muted: #6b7280; --card: #f8fafc;
+      --accent: #b91c1c; --accent-contrast: #fff; /* Tue Red base */
+      --radius: 10px; --max-width: 1000px;
+    }
 
-        /* Navigation */
-        nav {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 1rem 0;
-        }
+    [data-theme="dark"] {
+      --bg: #071018; --text: #e6eef6; --muted: #94a3b8; --card: #0f172a;
+      --accent: #f97316; --accent-contrast: #071018;
+    }
 
-        .nav-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-        }
+    [data-theme="academic"] {
+      --bg: #f4f1ea;          /* Classic book paper */
+      --text: #2c2c2c;        /* Ink black */
+      --muted: #5f6368;
+      --card: #ffffff;
+      --accent: #3d5a80;      /* Slate blue accent */
+      --accent-contrast: #ffffff;
+    }
 
-        .logo { font-weight: bold; font-size: 1.2rem; color: var(--dark); text-decoration: none; }
+    /* --- BASE STYLES --- */
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
+      background:var(--bg); color:var(--text);
+      line-height:1.6;
+    }
+    .wrap{max-width:var(--max-width); margin:28px auto; padding:0 20px;}
+    
+    /* Header */
+    header{display:flex;align-items:center;gap:16px;margin-bottom:32px; flex-wrap: wrap;}
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+    .site-logo{
+      width:64px;height:64px;border-radius:50%;
+      object-fit:cover;
+      box-shadow:0 6px 20px rgba(11,11,11,0.08);
+      border: 2px solid var(--card);
+    }
+    .site-title{font-size:22px;margin:0;font-weight:700;letter-spacing: -0.5px;}
+    
+    /* Social Icons */
+    .social-links{margin-left:auto; display: flex; gap: 15px; align-items: center;}
+    .social-icon{width:24px;height:24px;fill:currentColor;opacity: 0.7; transition: opacity 0.2s;}
+    .social-icon:hover{opacity: 1; color: #FF0000;} /* YouTube Red on hover */
 
-        .nav-links a {
-            margin-left: 20px;
-            text-decoration: none;
-            color: var(--text-grey);
-            font-weight: 500;
-            transition: color 0.3s;
-        }
+    /* Navigation Tabs */
+    .nav-tabs {
+        display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 10px;
+        overflow-x: auto;
+    }
+    .nav-btn {
+        background: transparent; border: none; font-size: 15px; font-weight: 500;
+        color: var(--muted); cursor: pointer; padding: 8px 12px; border-radius: 6px;
+        transition: all 0.2s;
+    }
+    .nav-btn:hover { color: var(--text); background: var(--card); }
+    .nav-btn.active { color: var(--accent); background: rgba(0,0,0,0.03); font-weight: 600; }
 
-        .nav-links a:hover { color: var(--primary); }
+    /* Layout */
+    main{display:grid;grid-template-columns: 1fr 300px; gap:40px;}
+    @media (max-width:800px){ main{grid-template-columns:1fr} .aside{order:2} }
+    
+    /* Cards & Content */
+    .card{background:var(--card);border-radius:var(--radius);
+      padding:24px;border:1px solid rgba(0,0,0,0.04); margin-bottom: 20px;}
+    .card h3{margin:0 0 8px 0; font-size: 1.2rem;}
+    .meta{font-size:13px;color:var(--muted);margin-bottom: 12px;}
+    .excerpt{color:var(--muted); font-size: 0.95rem;}
+    
+    /* Buttons */
+    .btn{
+      background:var(--accent); color:var(--accent-contrast);
+      padding:8px 16px;border-radius:6px;cursor:pointer;
+      border:none; font-size:14px;text-decoration:none;
+      display:inline-flex;align-items:center;gap:6px; font-weight: 500;
+      transition: opacity 0.2s;
+    }
+    .btn:hover{opacity: 0.9;}
+    .btn-outline { background: transparent; border: 1px solid var(--muted); color: var(--text); }
 
-        /* Hero Section (Profile) */
-        .hero {
-            text-align: center;
-            padding: 80px 20px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        }
+    /* Footer */
+    footer{margin-top:60px;color:var(--muted);font-size:13px;padding-bottom:40px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 20px;}
 
-        .profile-img {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%; /* Circular Crop */
-            object-fit: cover;
-            border: 4px solid white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-
-        h1 { font-size: 2.5rem; margin-bottom: 10px; color: var(--dark); }
-        .subtitle { font-size: 1.2rem; color: var(--text-grey); margin-bottom: 30px; }
-
-        .btn {
-            display: inline-block;
-            background: var(--primary);
-            color: white;
-            padding: 10px 25px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: transform 0.2s;
-        }
-        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
-        .btn-youtube { background: #FF0000; }
-
-        /* Sections */
-        .section {
-            max-width: 1000px;
-            margin: 60px auto;
-            padding: 0 20px;
-        }
-
-        .section-title {
-            border-bottom: 2px solid var(--primary);
-            display: inline-block;
-            margin-bottom: 30px;
-            font-size: 1.8rem;
-        }
-
-        /* Cool Stuff Grid */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
-            border: 1px solid #eee;
-        }
-
-        .card:hover { transform: translateY(-5px); }
-
-        .card-header {
-            height: 150px;
-            background: var(--dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 3rem;
-        }
-
-        .card-body { padding: 25px; }
-        .card h3 { margin-top: 0; }
-        .card p { color: #666; font-size: 0.9rem; margin-bottom: 20px; }
-
-    </style>
+  </style>
 </head>
-<body>
+<body data-theme="light">
 
-    <nav>
-        <div class="nav-container">
-            <a href="#" class="logo">I. Rachailovich</a>
-            <div class="nav-links">
-                <a href="#home">Home</a>
-                <a href="#cool-stuff">Cool Stuff</a>
-                <a href="#videos">Videos</a>
-                <a href="#articles">Articles</a>
+  <div class="wrap">
+    
+    <header>
+      <div class="brand">
+        <img src="assets/profile.png" alt="I. Rachailovich" class="site-logo" />
+        <div>
+            <h1 class="site-title">I. Rachailovich</h1>
+            <div style="font-size: 14px; color: var(--muted);">Researcher · Python · Math</div>
+        </div>
+      </div>
+
+      <nav class="social-links">
+        <a href="https://www.youtube.com/@itamar.j.rachailovich" target="_blank" aria-label="YouTube">
+          <svg class="social-icon" viewBox="0 0 24 24">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+        </a>
+        
+        <button class="btn btn-outline" id="themeToggle" style="padding: 4px 12px; font-size: 12px;">Dark</button>
+      </nav>
+    </header>
+
+    <div class="nav-tabs">
+        <button class="nav-btn active" onclick="switchTab('home')">Home</button>
+        <button class="nav-btn" onclick="switchTab('cool-stuff')">Cool Stuff</button>
+        <button class="nav-btn" onclick="switchTab('videos')">Videos</button>
+        <button class="nav-btn" onclick="switchTab('articles')">Articles</button>
+    </div>
+
+    <main>
+      <div id="content-area">
+        
+        <div id="tab-home" class="tab-content">
+            <div class="card">
+                <h3>Welcome</h3>
+                <p class="excerpt">
+                    I am I. Rachailovich, a researcher focusing on Gaussian Processes, Mathematical Visualization, and Python development. 
+                    This site hosts my interactive tools and research notes.
+                </p>
+            </div>
+            
+            <div class="card">
+                <div class="meta">Latest Update</div>
+                <h3>Gaussian Process Visualizer v1.0</h3>
+                <p class="excerpt">A new interactive tool to understand GP posteriors is now live.</p>
+                <br>
+                <button class="btn" onclick="switchTab('cool-stuff')">Try it out →</button>
             </div>
         </div>
-    </nav>
 
-    <section id="home" class="hero">
-        <img src="assets/profile.png" alt="Profile Photo" class="profile-img">
-
-        <h1>I. Rachailovich</h1>
-        <p class="subtitle">Researcher | Gaussian Processes | Python Developer</p>
-
-        <a href="https://www.youtube.com/@itamar.j.rachailovich" target="_blank" class="btn btn-youtube">
-            📺 Visit My YouTube Channel
-        </a>
-    </section>
-
-    <section id="cool-stuff" class="section">
-        <h2 class="section-title">Cool Stuff & Apps</h2>
-        <div class="grid">
-
-            <div class="card">
-                <div class="card-header" style="background: linear-gradient(45deg, #cc0000, #ff6b6b);">>
-                    📈
-                </div>
-                <div class="card-body">
-                    <h3>Interactive GP Visualizer</h3>
-                    <p>
-                        A tool to visualize Gaussian Processes. You can upload your own .mat files,
-                        click to add points, and see the posterior update in real-time.
-                    </p>
+        <div id="tab-cool-stuff" class="tab-content" style="display:none;">
+            <div class="card" style="border-left: 4px solid var(--accent);">
+                <div class="meta">Interactive Tool</div>
+                <h3>📈 GP Visualizer</h3>
+                <p class="excerpt">
+                    Upload your own <code>.mat</code> files or click to add data points. 
+                    Visualize how the Gaussian Process posterior updates in real-time.
+                </p>
+                <div style="margin-top: 15px;">
                     <a href="https://irachailovichappio-awj9hppdf8wzcgzqzmapzu.streamlit.app/" target="_blank" class="btn">
                         Launch App 🚀
                     </a>
                 </div>
             </div>
-
+            
             <div class="card">
-                <div class="card-header" style="background: #333;">
-                    ⏳
-                </div>
-                <div class="card-body">
-                    <h3>Future Project</h3>
-                    <p>More cool mathematical visualizations coming soon.</p>
-                </div>
+                <h3>More coming soon...</h3>
+                <p class="excerpt">Future projects on Fourier Analysis and Neural Networks will appear here.</p>
             </div>
-
         </div>
-    </section>
 
-    <section id="videos" class="section">
-        <h2 class="section-title">Latest Videos</h2>
-        <p><i>Video content will appear here...</i></p>
-        </section>
+        <div id="tab-videos" class="tab-content" style="display:none;">
+            <div class="card">
+                <h3>YouTube Content</h3>
+                <p class="excerpt">Subscribe to my channel for the latest tutorials and visualizations.</p>
+                <br>
+                <a href="https://www.youtube.com/@itamar.j.rachailovich" target="_blank" class="btn">Go to Channel</a>
+            </div>
+        </div>
 
-    <section id="articles" class="section">
-        <h2 class="section-title">Articles</h2>
-        <p><i>Articles and papers will appear here...</i></p>
-    </section>
+        <div id="tab-articles" class="tab-content" style="display:none;">
+            <div class="card">
+                <h3>Research Notes</h3>
+                <p class="excerpt"><i>No articles published yet. Check back soon.</i></p>
+            </div>
+        </div>
 
-    <footer style="text-align: center; padding: 40px; color: #999; font-size: 0.8rem;">
-        &copy; 2026 I. Rachailovich. Hosted on GitHub Pages.
+      </div>
+
+      <aside class="aside">
+        <div class="card">
+          <h3 style="margin-top:0">About</h3>
+          <p class="excerpt" style="font-size: 14px;">
+            Independent researcher exploring the intersection of math and code. 
+            Focused on rigorous, interactive explanations.
+          </p>
+        </div>
+      </aside>
+
+    </main>
+
+    <footer>
+      <div style="display:flex; justify-content:space-between;">
+        <span>© <span id="year"></span> I. Rachailovich</span>
+        <a href="https://github.com/irachailovich" style="color:inherit;">GitHub</a>
+      </div>
     </footer>
+  </div>
+
+  <script>
+    // --- THEME LOGIC (From Gauss) ---
+    const themes = ["light", "dark", "academic"];
+    const themeBtn = document.querySelector('#themeToggle');
+
+    function setTheme(theme) {
+      document.body.dataset.theme = theme;
+      const nextIndex = (themes.indexOf(theme) + 1) % themes.length;
+      const nextTheme = themes[nextIndex];
+      themeBtn.textContent = nextTheme.charAt(0).toUpperCase() + nextTheme.slice(1);
+    }
+
+    themeBtn.onclick = () => {
+      const currentTheme = document.body.dataset.theme || "light";
+      const nextIndex = (themes.indexOf(currentTheme) + 1) % themes.length;
+      setTheme(themes[nextIndex]);
+    };
+
+    // --- TAB LOGIC ---
+    function switchTab(tabName) {
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+        // Deactivate all buttons
+        document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+        
+        // Show selected
+        document.getElementById('tab-' + tabName).style.display = 'block';
+        // Highlight button (find by text roughly or index - simple loop here)
+        const btns = document.querySelectorAll('.nav-btn');
+        if(tabName === 'home') btns[0].classList.add('active');
+        if(tabName === 'cool-stuff') btns[1].classList.add('active');
+        if(tabName === 'videos') btns[2].classList.add('active');
+        if(tabName === 'articles') btns[3].classList.add('active');
+    }
+
+    // Init
+    document.getElementById('year').textContent = new Date().getFullYear();
+    setTheme("light");
+  </script>
 
 </body>
 </html>
